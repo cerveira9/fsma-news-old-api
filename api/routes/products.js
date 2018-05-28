@@ -42,9 +42,10 @@ router.get('/', (req, res, next) => {
                 count: docs.length,
                 products: docs.map(doc => {
                     return {
-                        name: doc.name,
-                        price: doc.price,
-                        productImage: doc.productImage,
+                        title: doc.title,
+                        subtitle: doc.subtitle,
+                        newsImage: doc.newsImage,
+                        //productImage: doc.productImage,
                         _id: doc._id,
                         request:
                             {
@@ -65,26 +66,29 @@ router.get('/', (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                error: err
+                error: err,
+                message: "erro 1"
             });
         });
 });
 
-router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
+router.post('/', upload.single('productImage'), (req, res, next) => {
     console.log(req.file);
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        price: req.body.price,
-        productImage: req.file.path
+        title: req.body.title,
+        subtitle: req.body.subtitle,
+        newsImage: req.body.newsImage
+       
     });
     product.save().then(result => {
         console.log(result);
         res.status(201).json({
             message: 'Created product successfully',
             createdProduct: {
-                name: result.name,
-                price: result.price,
+                title: result.title,
+                subtitle: result.subtitle,
+                newsImage: result.newsImage,
                 _id: result._id,
                 request:
                     {
@@ -96,7 +100,8 @@ router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
     }).catch(err => {
         console.log(err);
         res.status(500).json({
-            rerror: err
+            rerror: err,
+            message: "erro 2"
         });
     });
 });
@@ -125,10 +130,11 @@ router.get('/:productId', (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({ error: err });
+            message: "erro 3"
         });
 });
 
-router.patch('/:productId', checkAuth, (req, res, next) => {
+router.patch('/:productId', (req, res, next) => {
     const id = req.params.productId;
     const updateOps = {};
     for (const ops of req.body) {
@@ -159,7 +165,7 @@ router.patch('/:productId', checkAuth, (req, res, next) => {
         });
 });
 
-router.delete('/:productId', checkAuth, (req, res, next) => {
+router.delete('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findByIdAndRemove(id)
         .exec()
@@ -170,7 +176,7 @@ router.delete('/:productId', checkAuth, (req, res, next) => {
                     {
                         type: "POST",
                         url: "http://localhost:3000/products/",
-                        body: { name: "String", price: "Number" }
+                        body: { title: "String", subtitle: "Number" }
 
                     }
             });
@@ -179,7 +185,8 @@ router.delete('/:productId', checkAuth, (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                error: err
+                error: err,
+                message: "erro 4"
             });
         });
 });

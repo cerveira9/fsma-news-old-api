@@ -50,7 +50,7 @@ router.get('/', (req, res, next) => {
                         request:
                             {
                                 type: "GET",
-                                url: "https://calm-mountain-37210.herokuapp.com/products" + doc._id
+                                url: "https://calm-mountain-37210.herokuapp.com/products/" + doc._id
                             }
                     }
                 })
